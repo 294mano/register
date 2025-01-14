@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登入/註冊</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 h-screen flex items-center justify-center">
+    <div class="bg-white p-8 rounded-lg shadow-md w-96">
+        <div class="flex justify-center mb-8">
+            <img src="https://live.staticflickr.com/65535/54246386635_f95b7576c9_s.jpg" alt="Company Logo" class="w-24">
+        </div>
+        
+        <!-- 註冊表單 -->
+        <div class="mb-8">
+            <h2 class="text-2xl font-bold mb-4 text-center">新用戶註冊</h2>
+            <form id="registerForm">
+                <div class="mb-4">
+                    <input type="text" id="registerUsername" placeholder="用戶名稱" required
+                        class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div class="mb-4">
+                    <input type="email" id="registerEmail" placeholder="電子郵件" required
+                        class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div class="mb-4">
+                    <input type="password" id="registerPassword" placeholder="密碼" required
+                        class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <button type="submit"
+                    class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition duration-200">
+                    註冊
+                </button>
+            </form>
+        </div>
+
+        <!-- 登入表單 -->
+        <div>
+            <h2 class="text-2xl font-bold mb-4 text-center">用戶登入</h2>
+            <form id="loginForm">
+                <div class="mb-4">
+                    <input type="email" id="loginEmail" placeholder="電子郵件" required
+                        class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div class="mb-4">
+                    <input type="password" id="loginPassword" placeholder="密碼" required
+                        class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <button type="submit"
+                    class="w-full bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 transition duration-200">
+                    登入
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const SCRIPT_URL = 
+        'https://script.google.com/macros/s/AKfycbyz1SY3oyD8Ysl93SkpKKb7ITpbTDDnSdjuqQa4nNdF4YBbe7IiVq6ozVVXXxjDIzH6/exec';
+
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('registerUsername').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+
+            try {
+                const response = await fetch(`${SCRIPT_URL}?action=register&username=${encodeURIComponent(username)}&email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`, {
+                    method: 'GET',
+                    mode: 'no-cors'
+                });
+
+                alert('註冊請求已送出，請稍候...');
+                document.getElementById('registerForm').reset();
+            } catch (error) {
+                console.error('註冊錯誤:', error);
+                alert('發生錯誤，請稍後再試');
+            }
+        });
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            try {
+                console.log('開始登入流程');
+                
+                // 使用 fetch 發送登入請求
+                const response = await fetch(`${SCRIPT_URL}?action=login&email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}&t=${Date.now()}`, {
+                    method: 'GET',
+                    mode: 'no-cors'
+                });
+
+                // 由於使用 no-cors 模式，我們需要另外發送一個請求來確認登入狀態
+                const checkLoginStatus = await fetch(`${SCRIPT_URL}?action=checkLogin&email=${encodeURIComponent(email)}&t=${Date.now()}`, {
+                    method: 'GET',
+                    mode: 'no-cors'
+                });
+
+                // 登入成功後重定向
+                window.location.href = 'https://socialtaiwan.softr.app/';
+
+            } catch (error) {
+                console.error('登入錯誤:', error);
+                alert('發生錯誤，請稍後再試');
+            }
+        });
+    </script>
+</body>
+</html>
+Last edited just now
+
+
+
+
+
+
